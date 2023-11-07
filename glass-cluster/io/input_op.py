@@ -1,11 +1,5 @@
-import json
-from dpdata import System
 from pymatgen.core.structure import Structure
-from pymatgen.io.vasp.inputs import Poscar
-import numpy as np
-import random
 from pathlib import Path
-import os
 import shutil
 from typing import List
 
@@ -16,13 +10,10 @@ from dflow.python import (
     OP,
     OPIO,
     Artifact,
-    BigParameter,
     OPIOSign,
     Parameter,
-    TransientError,
 )
 from dflow.python.opio import OPIO, OPIOSign
-from dpdata import System
 
 class StrucPrep(OP):
 
