@@ -1,11 +1,13 @@
-import random
-from pathlib import Path
 import os
+import random
 import shutil
-from pymatgen.core.structure import Structure
+from pathlib import Path
+
 import numpy as np
 from dpdata import System
 from pymatgen.core.periodic_table import Element
+from pymatgen.core.structure import Structure
+
 
 def structure_to_sys(pmg_structure):
     r"""Convert dpdata.System object into pymatgen.Structure object

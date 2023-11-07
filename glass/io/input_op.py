@@ -1,14 +1,11 @@
-from pathlib import Path
 import shutil
+from pathlib import Path
+
+from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
 from pymatgen.core.structure import Structure
-from dflow.python import (
-    OP,
-    OPIO,
-    Artifact,
-    OPIOSign,
-    Parameter,
-)
-from glass.io.input import get_dope, convert_to_lmp_data
+
+from glass.io.input import convert_to_lmp_data, get_dope
+
 
 class StrucPrep(OP):
     r"""
