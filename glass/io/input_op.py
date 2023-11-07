@@ -1,11 +1,6 @@
-from pymatgen.core.structure import Structure
 from pathlib import Path
 import shutil
-from typing import List
-
-from .input import get_dope, convert_to_lmp_data
-
-import pandas as pd
+from pymatgen.core.structure import Structure
 from dflow.python import (
     OP,
     OPIO,
@@ -13,9 +8,12 @@ from dflow.python import (
     OPIOSign,
     Parameter,
 )
-from dflow.python.opio import OPIO, OPIOSign
+from glass.io.input import get_dope, convert_to_lmp_data
 
 class StrucPrep(OP):
+    r"""
+    This is a OP used to prep Structure
+    """
 
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
@@ -28,13 +26,13 @@ class StrucPrep(OP):
             "compen_ratio": Parameter(float),
             "compen_type": Parameter(str)
         })
-    
+
     @classmethod
     def get_output_sign(cls) -> OPIOSign:
         return OPIOSign({
             "dir_path": Artifact(Path)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         filename = op_in["filename"]
@@ -53,7 +51,7 @@ class StrucPrep(OP):
             compen_ratio,
             compen_type
         )
-        dir_path = convert_to_lmp_data(new_structure)
+        dir_path = convert_to_lmp_data(new_structure, type_map, mass_map)
         op_out = {
             "dir_path": dir_path
         }
@@ -61,6 +59,9 @@ class StrucPrep(OP):
 
 
 class InputPrep(OP):
+    r"""
+    This is a OP used to prep Input
+    """
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
         return OPIOSign({
@@ -69,13 +70,13 @@ class InputPrep(OP):
             "provided_in_lmp": bool,
             "in_lmp": Artifact(Path)
         })
-    
+
     @classmethod
     def get_output_sign(cls) -> OPIOSign:
         return OPIOSign({
             "run_path": Artifact(Path)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         dir_path = op_in["dir_path"]

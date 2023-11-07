@@ -1,12 +1,11 @@
-from dpdata import System
-from pymatgen.core.structure import Structure
-import numpy as np
 import random
 from pathlib import Path
 import os
 import shutil
-
+from pymatgen.core.structure import Structure
+import numpy as np
 from dpdata import System
+from pymatgen.core.periodic_table import Element
 
 def structure_to_sys(pmg_structure):
     r"""Convert dpdata.System object into pymatgen.Structure object
@@ -20,7 +19,6 @@ def structure_to_sys(pmg_structure):
     dp_system : (`System`) structure information contained in `dpdata.System`
 
     """
-    from pymatgen.core.periodic_table import Element
     seen = set()
     atom_names = [str(site.specie) for site in pmg_structure \
                   if not (str(site.specie) in seen or seen.add(str(site.specie)))]
@@ -104,10 +102,12 @@ def get_dope(
 
 def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
     r"""
+    This function would change a pymatgen structure object to a file
+    can be used for lammps calculation
     """
     struc = structure_to_sys(structure)
     struc.to('lmp', 'lmp.data')
-    with open('lmp.data', 'r') as fp:
+    with open('lmp.data', 'r', encoding='utf-8') as fp:
         lines = fp.readlines()
         new_lines = lines[0:8]
         new_lines.append('\n')
@@ -152,7 +152,7 @@ def add_md_process(
     param.append(f'run             {param_dict["n_steps"]}\n')
     param.append(f'unfix           {fix_id}\n')
     return param
-    
+
 def add_minimize(param: list, e_tol: float=1e-10, f_tol: float=1e-8):
     param.append(f'minimize        {e_tol} {f_tol} 10000 100000')
     return param
