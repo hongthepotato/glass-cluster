@@ -1,0 +1,4 @@
+-i https://pypi.tuna.tsinghua.edu.cn/simple/
+dpdata>=0.2.16
+pydflow>=1.8.1
+pymatgen==2023.10.11
