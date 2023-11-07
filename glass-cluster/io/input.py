@@ -131,37 +131,32 @@ def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
     # shutil.copy('in.lmp', Path(dir_name))
     return dir_path
 
-
-
-def add_keep_process(
+def add_md_process(
     param: list,
-    thermo_steps: int,
-    traj_file_name: str,
-    fix_id: int,
-    ensemble: str,
-    n_steps: int,
-    ini_t: float = 300,
-    final_t: float = 300,
-    t_damp: float = 0.1,
-    t_step: float = 1e-4,
-    ini_p: float = 0.1,
-    final_p: float = 0.1,
-    p_damp: float = 1.0,
-    p_style: str = 'iso',
-    dump_freq: int = 1000
+    param_dict: dict,
+    fix_id: int
 ):
     param.append('thermo_style    custom step temp epair etotal econserve press density pe\n')
-    param.append(f'thermo          {thermo_steps}\n')
-    param.append(f'fix             {fix_id} all {ensemble} temp {ini_t} {final_t} {t_damp} {p_style} {ini_p} {final_p} {p_damp}\n')
-    param.append(f'timestep        {t_step}\n')
+    param.append(f'thermo          {param_dict["thermo_steps"]}\n')
+    ensemble = param_dict["ensemble"]
+    if ensemble == 'npt':
+        param.append(f'fix             {fix_id} all {ensemble} temp {param_dict["ini_t"]} \
+                     {param_dict["final_t"]} {param_dict["t_damp"]} {param_dict["p_style"]} \
+                        {param_dict["ini_p"]} {param_dict["final_p"]} {param_dict["p_damp"]}\n')
+    elif ensemble == 'nvt':
+        param.append(f'fix             {fix_id} all {ensemble} temp {param_dict["ini_t"]} \
+                     {param_dict["final_t"]} {param_dict["t_damp"]}\n')
+    else:
+        raise NotImplementedError('Only npt and nvt supported for now.')
+    param.append(f'timestep        {param_dict["time_step"]}\n')
     param.append('neighbor        1.0 bin\n')
     param.append('neigh_modify    every 2 delay 10 check yes\n')
-    param.append(f'dump Dumpstay all custom {dump_freq} {traj_file_name}.lammpstrj id type x y z\n')
-    param.append(f'run             {n_steps}\n')
+    param.append(f'dump Dumpstay all custom {param_dict["dump_freq"]} \
+                 {param_dict["traj_file_name"]}.lammpstrj id type x y z\n')
+    param.append(f'run             {param_dict["n_steps"]}\n')
     param.append(f'unfix           {fix_id}\n')
     return param
     
-
 def add_minimize(param: list, e_tol: float=1e-10, f_tol: float=1e-8):
     param.append(f'minimize        {e_tol} {f_tol} 10000 100000')
     return param
@@ -178,8 +173,16 @@ def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
     param.append('pair_coeff      * *\n')
     if config.get["processes"]:
         processes = config.get["processes"]
-        for _id, sub_dict in processes:
-            pass
+        for sub_dict in processes:
+            if sub_dict.get('process') == 'minimize':
+                param = add_minimize(param)
+            elif sub_dict.get('process') == 'md_run':
+                param = add_md_process(param, sub_dict["params"], sub_dict["_idx"])
+            else:
+                raise NotImplementedError('only minimize and md_run supported for now.')
+    with open('in.lmp', 'w') as file:
+        file.writelines(param)
+    return None
 
 def grasp_strucs_from_traj(traj_name: str, every_n_frame: int):
     total_strucs = System(traj_name, 'lammps/dump')

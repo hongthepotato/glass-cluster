@@ -1,0 +1,24 @@
+{
+    "processes": 
+    [{
+        "_idx": 0,
+        "process": "minimize/md_run",
+        "params": {
+            "etol": 1e-10,
+            "ftol": 1e-8,
+            "thermo_steps": 2000,
+            "traj_file_name": "filename",
+            "ensemble": "npt",
+            "n_steps": 2000,
+            "ini_t": 300,
+            "final_t": 300,
+            "t_damp": 0.1,
+            "t_step": 1e-4,
+            "ini_p": 0.1,
+            "final_p": 0.1,
+            "p_damp": 1.0,
+            "p_style": "iso",
+            "dump_freq": 1000
+        }
+    }]
+}

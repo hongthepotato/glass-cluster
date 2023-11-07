@@ -7,8 +7,9 @@ import random
 from pathlib import Path
 import os
 import shutil
+from typing import List
 
-from io.input import get_dope, convert_to_lmp_data
+from .input import get_dope, convert_to_lmp_data
 
 import pandas as pd
 from dflow.python import (
@@ -65,4 +66,37 @@ class StrucPrep(OP):
         op_out = {
             "dir_path": dir_path
         }
+        return op_out
+
+
+class InputPrep(OP):
+    @classmethod
+    def get_input_sign(cls) -> OPIOSign:
+        return OPIOSign({
+            "dir_path": Artifact(Path),
+            "processes": dict,
+            "provided_in_lmp": bool,
+            "in_lmp": Artifact(Path)
+        })
+    
+    @classmethod
+    def get_output_sign(cls) -> OPIOSign:
+        return OPIOSign({
+            "run_path": Artifact(Path)
+        })
+    
+    @OP.exec_sign_check
+    def execute(self, op_in: OPIO) -> OPIO:
+        dir_path = op_in["dir_path"]
+        provided_in_lmp = op_in["provided_in_lmp"]
+        if provided_in_lmp:
+            in_lmp = op_in["in_lmp"]
+            shutil.move(in_lmp, dir_path)
+        else:
+            pass
+
+        op_out = {
+            "run_path": dir_path
+        }
+
         return op_out
