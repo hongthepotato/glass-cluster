@@ -25,7 +25,7 @@ jobs:
       continue-on-error: true
     - name: Run isort (mandatory)
       run: |
-        isort --check-only --diff
+        isort . --check-only --diff
     - name: Run pytest
       run: |
         pytest
