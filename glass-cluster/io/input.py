@@ -8,17 +8,6 @@ from pathlib import Path
 import os
 import shutil
 
-import pandas as pd
-from dflow.python import (
-    OP,
-    OPIO,
-    Artifact,
-    BigParameter,
-    OPIOSign,
-    Parameter,
-    TransientError,
-)
-from dflow.python.opio import OPIO, OPIOSign
 from dpdata import System
 
 def structure_to_sys(pmg_structure):
@@ -35,7 +24,8 @@ def structure_to_sys(pmg_structure):
     """
     from pymatgen.core.periodic_table import Element
     seen = set()
-    atom_names = [str(site.specie) for site in pmg_structure if not (str(site.specie) in seen or seen.add(str(site.specie)))]
+    atom_names = [str(site.specie) for site in pmg_structure \
+                  if not (str(site.specie) in seen or seen.add(str(site.specie)))]
     atom_numbs = [int(pmg_structure.composition[Element(name)]) for name in atom_names]
     atom_types = np.array([atom_names.index(str(site.specie)) for site in pmg_structure])
     data = {
@@ -60,7 +50,8 @@ def substitute_atoms(
     r"""
     """
     neighbors = structure.get_neighbors(structure[first_index], radius)
-    dis_indices_combine = [(i.index, structure.get_distance(first_index, i.index)) for i in neighbors if i.species_string == element_to_replace]
+    dis_indices_combine = [(i.index, structure.get_distance(first_index, i.index)) \
+                           for i in neighbors if i.species_string == element_to_replace]
     sorted_list = sorted(dis_indices_combine, key=lambda x: x[1])
     try:
         if n > len(sorted_list):
@@ -85,7 +76,7 @@ def get_dope(
     random.seed(42)
     remove_indices = [i for i, site in enumerate(structure) if site.species_string == remove_type]
     num_remove = int(len(remove_indices) * ratio)
-    if method == 'random': 
+    if method == 'random':
         remove_indices_to_replace = random.sample(remove_indices, num_remove)
     if method == 'clustering':
         indices_to_remove = []
@@ -93,10 +84,17 @@ def get_dope(
             if site.species_string == remove_type:
                 indices_to_remove.append(i)
         if num_remove > len(indices_to_remove):
-            raise ValueError(f"Cannot replace {num_remove} atoms, only {len(indices_to_remove)} available")
+            raise ValueError(f"Cannot replace {num_remove} atoms, \
+                             only {len(indices_to_remove)} available")
         first_index = random.sample(indices_to_remove)
         structure.replace(first_index, dopant_type)
-        remove_indices_to_replace = substitute_atoms(structure, first_index, remove_type, 10, num_remove)
+        remove_indices_to_replace = substitute_atoms(
+            structure,
+            first_index,
+            remove_type,
+            10,
+            num_remove
+        )
     for index in remove_indices_to_replace:
         structure.replace(index, dopant_type)
     num_compen_remove = int(num_remove * compen_ratio)
