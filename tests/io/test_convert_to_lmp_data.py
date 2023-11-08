@@ -1,5 +1,5 @@
-from pathlib import Path
 import filecmp
+from pathlib import Path
 
 import pytest
 

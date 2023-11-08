@@ -1,8 +1,8 @@
 import os
 import random
 import shutil
-from typing import List, Optional
 from pathlib import Path
+from typing import List, Optional
 
 import numpy as np
 from dpdata import System
