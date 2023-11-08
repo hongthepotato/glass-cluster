@@ -1,6 +1,7 @@
 import os
 import random
 import shutil
+from typing import List, Optional
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,7 @@ from pymatgen.core.periodic_table import Element
 from pymatgen.core.structure import Structure
 
 
-def structure_to_sys(pmg_structure):
+def structure_to_sys(pmg_structure: Structure) -> System:
     r"""Convert dpdata.System object into pymatgen.Structure object
 
     Parameters
@@ -44,8 +45,22 @@ def substitute_atoms(
     element_to_replace: str,
     radius: float,
     n: int
-):
-    r"""
+) -> List[int]:
+    r"""Substitute `n` atoms of specified specie around a certain atom within
+    certain radius. if there are not enough `n` atoms within radius, the sphere
+    would be enlarged 
+
+    Parameters
+    ----------
+    structure : (`Structure`) structure to be doped
+    first_index : (`int`) index of certain atom around which atoms would be replaced
+    element_to_replace : (`str`) dopant type of element
+    radius : (`float`) within this radius, atoms would be replaced
+    n : (`int`) number of atoms to be replaced
+
+    Returns
+    -------
+    remove_indices : (`List[int]`) the index of atoms to be replaced
     """
     neighbors = structure.get_neighbors(structure[first_index], radius)
     dis_indices_combine = [(i.index, structure.get_distance(first_index, i.index)) \
@@ -66,17 +81,27 @@ def get_dope(
     ratio: float,
     remove_type: str,
     dopant_type: str,
-    compen_ratio: float,
-    compen_type: str
-):
-    r"""
+    compen_ratio: Optional[float] = 0.0,
+    compen_type: Optional[str] = None
+) -> Structure:
+    r"""Generate doped structure in two different ways: 1.randomly; 2.around a certain atom
+
+    Parameters
+    ----------
+    structure : (`Structure`) structure to be doped
+    method : (`str`) generating method, choose from either `random` or `clustering`
+    ratio : (`float`) the ratio certain type of atoms to be removed
+    remove_type : (`str`) type of atoms to be removed
+    dopant_type : (`str`) dopant type
+    compen_ratio : (`float`)
+    compen_type : (`str`)
     """
     random.seed(42)
     remove_indices = [i for i, site in enumerate(structure) if site.species_string == remove_type]
     num_remove = int(len(remove_indices) * ratio)
     if method == 'random':
         remove_indices_to_replace = random.sample(remove_indices, num_remove)
-    if method == 'clustering':
+    elif method == 'clustering':
         indices_to_remove = []
         for i, site in enumerate(structure):
             if site.species_string == remove_type:
@@ -93,6 +118,8 @@ def get_dope(
             10,
             num_remove
         )
+    else:
+        raise NotImplementedError('Only random and clustering supported for now.')
     for index in remove_indices_to_replace:
         structure.replace(index, dopant_type)
     num_compen_remove = int(num_remove * compen_ratio)
@@ -103,9 +130,14 @@ def get_dope(
     return structure
 
 def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
-    r"""
-    This function would change a pymatgen structure object to a file
+    r"""write a pymatgen structure object to a file
     can be used for lammps calculation
+
+    Parameters
+    ----------
+    structure : (`Structure`) structure
+    type_map : (`dict`) {"0": H}
+    mass_map : (`dict`) atomic mass of chemical element {"H": 1}
     """
     struc = structure_to_sys(structure)
     struc.to('lmp', 'lmp.data')
@@ -121,13 +153,13 @@ def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
         new_lines += lines[8:]
     with open('lmp.data', 'w') as f:
         f.writelines(new_lines)
-    dir_name = 'lmp'
-    os.makedirs('lmp', exist_ok=True)
-    dir_path = Path(dir_name)
-    shutil.copy('lmp.data', dir_path)
+    # dir_name = 'lmp'
+    # os.makedirs('lmp', exist_ok=True)
+    # dir_path = Path(dir_name)
+    # shutil.copy('lmp.data', dir_path)
     # shutil.copy(model_name, Path(dir_name))
     # shutil.copy('in.lmp', Path(dir_name))
-    return dir_path
+    return None
 
 def add_md_process(
     param: list,
