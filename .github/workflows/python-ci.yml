@@ -27,6 +27,5 @@ jobs:
       run: |
         isort . --check-only --diff
     - name: Run pytest
-      working-directory: ./project
       run: |
         pytest
