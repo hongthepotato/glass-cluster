@@ -129,7 +129,12 @@ def get_dope(
     # structure.to('POSCAR-modified', 'poscar')
     return structure
 
-def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
+def convert_to_lmp_data(
+        structure: Structure,
+        type_map: dict,
+        mass_map: dict,
+        work_dir: Path
+    ):
     r"""write a pymatgen structure object to a file
     can be used for lammps calculation
 
@@ -140,25 +145,20 @@ def convert_to_lmp_data(structure: Structure, type_map: dict, mass_map: dict):
     mass_map : (`dict`) atomic mass of chemical element {"H": 1}
     """
     struc = structure_to_sys(structure)
-    struc.to('lmp', 'lmp.data')
-    with open('lmp.data', 'r', encoding='utf-8') as fp:
+    temp_file = os.path.join(work_dir, "lmp_temp.data")
+    struc.to('lmp', temp_file)
+    with open(temp_file, 'r', encoding='utf-8') as fp:
         lines = fp.readlines()
         new_lines = lines[0:8]
-        new_lines.append('\n')
         new_lines.append('Masses\n')
         new_lines.append('\n')
         for ele_type in type_map.keys():
             new_lines.append(f'{int(ele_type[-1]) + 1} {mass_map[type_map[ele_type]]}\n')
         new_lines.append('\n')
         new_lines += lines[8:]
-    with open('lmp.data', 'w') as f:
+    with open(Path(work_dir) / 'lmp.data', 'w') as f:
         f.writelines(new_lines)
-    # dir_name = 'lmp'
-    # os.makedirs('lmp', exist_ok=True)
-    # dir_path = Path(dir_name)
-    # shutil.copy('lmp.data', dir_path)
-    # shutil.copy(model_name, Path(dir_name))
-    # shutil.copy('in.lmp', Path(dir_name))
+    os.remove(temp_file)
     return None
 
 def add_md_process(
