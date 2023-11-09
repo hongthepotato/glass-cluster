@@ -214,8 +214,40 @@ def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
         file.writelines(param)
     return None
 
-def grasp_strucs_from_traj(traj_name: str, every_n_frame: int):
+def grasp_strucs_from_traj(
+        traj_name: str,
+        every_n_frame: int,
+        type_map: dict,
+        mass_map: dict
+    ) -> List[Path]:
+    """This function is used to grasp single structures from a lammps trajectory
+
+    Args:
+        traj_name (str): filaname of the traj
+        every_n_frame (int): select frame from the traj every n frames
+        type_map (dict): type map
+        mass_map (dict): mass map
+    """
     total_strucs = System(traj_name, 'lammps/dump')
     selected_strucs = total_strucs[::every_n_frame]
-    type_map = {'TYPE_0': 'Si','TYPE_1':'O', 'TYPE_2':'Bi'}
-    pass
+    list_path = []
+    for i, frame in enumerate(selected_strucs):
+        frame.to('lmp', f'lmp-{i}.data')
+        with open(f'lmp-{i}.data', 'r') as fp:
+            lines = fp.readlines()
+            new_lines = lines[0:8]
+            new_lines.append('\n')
+            new_lines.append('Masses\n')
+            new_lines.append('\n')
+            for ele_type in type_map.keys():
+                new_lines.append(f'{int(ele_type[-1]) + 1} {mass_map[type_map[ele_type]]}\n')
+            new_lines.append('\n')
+            new_lines += lines[8:]
+        with open(f'lmp-{i}.data', 'w') as f:
+            f.writelines(new_lines)
+        os.makedirs(f'lmp-{i}', exist_ok=True)
+        shutil.copy(f'lmp-{i}.data', Path(f'lmp-{i}') / 'lmp.data')
+        shutil.copy('graph.000.pb', Path(f'lmp-{i}'))
+        shutil.copy('in.lmp', Path(f'lmp-{i}'))
+        list_path.append(Path(f'lmp-{i}'))
+        return list_path

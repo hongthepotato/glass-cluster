@@ -28,5 +28,4 @@ jobs:
         isort . --check-only --diff
     - name: Run pytest
       run: |
-        ls
         pytest
