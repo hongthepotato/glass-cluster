@@ -1,10 +1,8 @@
 import filecmp
 from pathlib import Path
 
-import pytest
-import sys
-
 from glass.io.input import convert_to_lmp_data
+
 
 def compare_files(file1, file2):
     with open(file1, 'r', encoding='utf-8') as f1, open(file2, 'r', encoding='utf-8') as f2:

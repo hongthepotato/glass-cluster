@@ -6,15 +6,20 @@ from tqdm import tqdm
 
 
 def get_type_index(type_map, target_element):
-    """_summary_
+    """get the index of target element
 
     Args:
-        type_map (_type_): _description_
-        target_element (_type_): _description_
+        type_map (_type_): type map start from zero {"0": H}
+        target_element (_type_): element like "H"
     """    
+    type_index = None
     for key, value in type_map.items():
         if value == target_element:
             type_index = int(key[-1]) + 1
+            break
+    if type_index is None:
+        raise ValueError(f"Target element '{target_element}' not found in type_map")
+    
     return type_index
 
 def parse_single(filename: str, target_element: str, type_map: dict):
