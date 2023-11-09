@@ -1,7 +1,9 @@
-import matplotlib.pyplot as plt
-from tqdm import tqdm
 from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
+
 
 def get_type_index(type_map, target_element):
     """_summary_

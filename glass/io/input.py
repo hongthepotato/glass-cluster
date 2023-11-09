@@ -166,6 +166,19 @@ def add_md_process(
     param_dict: dict,
     fix_id: int
 ):
+    """_summary_
+
+    Args:
+        param (list): _description_
+        param_dict (dict): _description_
+        fix_id (int): _description_
+
+    Raises:
+        NotImplementedError: _description_
+
+    Returns:
+        _type_: _description_
+    """    
     param.append('thermo_style    custom step temp epair etotal econserve press density pe\n')
     param.append(f'thermo          {param_dict["thermo_steps"]}\n')
     ensemble = param_dict["ensemble"]
@@ -188,10 +201,34 @@ def add_md_process(
     return param
 
 def add_minimize(param: list, e_tol: float=1e-10, f_tol: float=1e-8):
+    """_summary_
+
+    Args:
+        param (list): _description_
+        e_tol (float, optional): _description_. Defaults to 1e-10.
+        f_tol (float, optional): _description_. Defaults to 1e-8.
+
+    Returns:
+        _type_: _description_
+    """    
     param.append(f'minimize        {e_tol} {f_tol} 10000 100000')
     return param
 
 def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
+    """_summary_
+
+    Args:
+        config (dict): _description_
+        param (list): _description_
+        model_name (str): _description_
+        struc_file (str): _description_
+
+    Raises:
+        NotImplementedError: _description_
+
+    Returns:
+        _type_: _description_
+    """    
     param.append(f'units           metal\n')
     param.append('\n')
     param.append('atom_style      atomic\n')
