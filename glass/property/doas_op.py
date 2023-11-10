@@ -15,7 +15,7 @@ class GraspSnapShotOP(OP):
 
     Args:
         OP (_type_): _description_
-    """    
+    """
 
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
@@ -28,14 +28,14 @@ class GraspSnapShotOP(OP):
             "type_map": Parameter(dict),
             "mass_map": Parameter(dict)
         })
-    
+
     @classmethod
     def get_output_sign(cls) -> OPIOSign:
         return OPIOSign({
             "minimize_dirs": Artifact(List[Path]),
             "num_minimize": Parameter(int)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         traj_file_name = op_in["traj_file_name"]
@@ -65,7 +65,7 @@ class PlotDoas(OP):
 
     Args:
         OP (_type_): _description_
-    """    
+    """
 
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
@@ -81,7 +81,7 @@ class PlotDoas(OP):
         return OPIOSign({
             "doas_fig": Artifact(Path)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         target_element = op_in["target_element"]

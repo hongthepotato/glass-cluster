@@ -1,13 +1,10 @@
 import json
-import time
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 from dflow import Step, Workflow, argo_range, upload_artifact
-from dflow.plugins.datasets import DatasetsArtifact
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import PythonOPTemplate, Slices
-from dflow.utils import download_artifact
 
 from glass.io.input_op import MDInputPrepOP, StrucPrepOP
 from glass.property.doas_op import GraspSnapShotOP, PlotDoas
@@ -20,7 +17,7 @@ def amorphous_flow(
     dflow_labels = None,
     **pdata
 ) -> Workflow:
-    
+
     wf = Workflow(
         name='amorphous',
         labels=dflow_labels,
@@ -48,7 +45,7 @@ def amorphous_flow(
         },
         key="prep-struc"
     )
-    
+
     wf.add(prep_struc)
 
     prep_MD_input = Step(
@@ -81,7 +78,7 @@ def amorphous_flow(
         artifacts={
             "work_dir": prep_MD_input.outputs.artifacts["run_path"]
         },
-        executor="execotur_run",
+        executor=executor_run,
         key='run-dp'
     )
 
@@ -129,7 +126,7 @@ def amorphous_flow(
         },
         with_param=argo_range(grasp_snap.outputs.parameters["num_minimize"]),
         key="mini-snap-{{item}}",
-        executor=""
+        executor=executor_run
     )
 
     wf.add(minimize_snap)

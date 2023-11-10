@@ -1,4 +1,3 @@
-import os
 import shutil
 from pathlib import Path
 
@@ -68,20 +67,20 @@ class StrucPrepOP(OP):
 
     Returns:
         _type_: _description_
-    """   
+    """
 
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
         return OPIOSign({
             "struc_file": Artifact(Path)
         })
-    
+
     @classmethod
     def get_output_sign(cls) -> OPIOSign:
         return OPIOSign({
             "pmg_struc": Parameter(Structure)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         struc_file = op_in["struc_file"]
@@ -122,14 +121,14 @@ class MDInputPrepOP(OP):
         dir_path.mkdir(exist_ok=True)
         model = op_in["model"]
         pmg_struc = op_in["struc"]
+        type_map = op_in["type_map"]
+        mass_map = op_in["mass_map"]
         file_path = convert_to_lmp_data(pmg_struc, type_map, mass_map, dir_path)
         in_lmp = op_in["in_lmp"]
         if in_lmp:
             shutil.move(in_lmp, dir_path)
         else:
             processes = op_in["processes"]
-            type_map = op_in["type_map"]
-            mass_map = op_in["mass_map"]
             build_in_lmp(processes, model.name, file_path.name, dir_path)
         op_out = {
             "run_path": dir_path

@@ -1,5 +1,3 @@
-import filecmp
-from pathlib import Path
 
 from glass.io.input import convert_to_lmp_data
 

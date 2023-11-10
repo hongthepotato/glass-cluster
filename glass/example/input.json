@@ -1,10 +1,10 @@
-{   
+{
     "structure": "./a.vasp",
     "in_lmp": null,
     "type_map": {"0": "H", "1": "Si"},
     "mass_map": {"H": 1, "Si": 28},
     "model": "./graph.000.pb",
-    "processes": 
+    "processes":
     [{
         "_idx": 0,
         "process": "minimize/md_run",

@@ -48,7 +48,7 @@ def substitute_atoms(
 ) -> List[int]:
     r"""Substitute `n` atoms of specified specie around a certain atom within
     certain radius. if there are not enough `n` atoms within radius, the sphere
-    would be enlarged 
+    would be enlarged
 
     Parameters
     ----------
@@ -179,7 +179,7 @@ def add_md_process(
 
     Returns:
         _type_: _description_
-    """    
+    """
     param.append('thermo_style    custom step temp epair etotal econserve press density pe\n')
     param.append(f'thermo          {param_dict["thermo_steps"]}\n')
     ensemble = param_dict["ensemble"]
@@ -211,7 +211,7 @@ def add_minimize(param: list, e_tol: float=1e-10, f_tol: float=1e-8):
 
     Returns:
         _type_: _description_
-    """    
+    """
     param.append(f'minimize        {e_tol} {f_tol} 10000 100000')
     return param
 
@@ -235,7 +235,7 @@ def build_in_lmp(
 
     Returns:
         _type_: _description_
-    """    
+    """
     param = []
     param.append('units           metal\n')
     param.append('\n')

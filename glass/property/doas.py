@@ -10,8 +10,8 @@ def generate_doas_mini_input(model: str, work_dir: Path) -> Path:
 
     Args:
         work_dir (Path): _description_
-    """   
-    ret = [] 
+    """
+    ret = []
     ret.append("units           metal\n")
     ret.append("\n")
     ret.append("atom_style      atomic\n")
@@ -38,7 +38,7 @@ def get_type_index(type_map, target_element):
     Args:
         type_map (_type_): type map start from zero {"0": H}
         target_element (_type_): element like "H"
-    """    
+    """
     type_index = None
     for key, value in type_map.items():
         if value == target_element:
@@ -46,7 +46,7 @@ def get_type_index(type_map, target_element):
             break
     if type_index is None:
         raise ValueError(f"Target element '{target_element}' not found in type_map")
-    
+
     return type_index
 
 def parse_single(filename: str, target_element: str, type_map: dict):
@@ -57,7 +57,7 @@ def parse_single(filename: str, target_element: str, type_map: dict):
         filename (str): filename of the output of minimization
         target_element (str): target_element
         type_map (dict): type map
-    """    
+    """
     data = []
     type_index = get_type_index(type_map, target_element)
     with open(filename, 'r', encoding='utf-8') as file:
@@ -91,7 +91,7 @@ def plot_doas(
         target_element (str): _description_
         bins (int): _description_
         type_map (dict): _description_
-    """    
+    """
     filename = 'dump.atom_energy'
     data = []
     # target_energy = []

@@ -9,7 +9,7 @@ class DpRunOP(OP):
 
     Args:
         OP (_type_): _description_
-    """    
+    """
 
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
@@ -17,13 +17,13 @@ class DpRunOP(OP):
             "work_dir": Artifact(Path),
             "command": Parameter(str)
         })
-    
+
     @classmethod
     def get_output_sign(cls) -> OPIOSign:
         return OPIOSign({
             "dp_dir": Artifact(Path)
         })
-    
+
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
         work_dir = op_in["work_dir"]
@@ -34,4 +34,3 @@ class DpRunOP(OP):
             "dp_dir": op_in["work_dir"]
         }
         return op_out
-    

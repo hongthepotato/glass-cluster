@@ -5,7 +5,7 @@ from typing import Any, Optional, Type
 
 import dflow
 from dflow.plugins import bohrium
-from dflow.plugins.bohrium import BohriumExecutor, TiefblueClient
+from dflow.plugins.bohrium import TiefblueClient
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import upload_packages
 
@@ -20,7 +20,7 @@ class InfoFlowTemplate(dict):
     Args:
         dict (_type_): default settings of parameters, defined in
         instance method get_default_dict
-    """    
+    """
     def __init__(
         self,
         ip_dict: Optional[dict] = None,
@@ -29,9 +29,9 @@ class InfoFlowTemplate(dict):
         """class init
 
         Args:
-            ip_dict (Optional[dict], optional): 
+            ip_dict (Optional[dict], optional):
                 the dict to be written to the instance. Defaults to None.
-            init_class (Optional[Type[Any]], optional): 
+            init_class (Optional[Type[Any]], optional):
                 the inheritance class, which has newly defined get_default_dict
                 instance method. Defaults to None.
         """
@@ -126,7 +126,7 @@ class InfoFlowTemplate(dict):
             txt = f.read()
         read_param = eval(txt)
         InfoFlowTemplate.update_dict(self, read_param)
-            
+
 
 
 class Mdata(InfoFlowTemplate):
