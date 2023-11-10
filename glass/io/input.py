@@ -159,7 +159,8 @@ def convert_to_lmp_data(
     with open(Path(work_dir) / 'lmp.data', 'w') as f:
         f.writelines(new_lines)
     os.remove(temp_file)
-    return None
+    file_path = Path(work_dir) / 'lmp.data'
+    return file_path
 
 def add_md_process(
     param: list,
@@ -214,7 +215,13 @@ def add_minimize(param: list, e_tol: float=1e-10, f_tol: float=1e-8):
     param.append(f'minimize        {e_tol} {f_tol} 10000 100000')
     return param
 
-def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
+def build_in_lmp(
+    processes: dict,
+    # param: list,
+    model_name: str,
+    struc_file: str,
+    work_dir: Path
+) -> None:
     """_summary_
 
     Args:
@@ -229,7 +236,8 @@ def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
     Returns:
         _type_: _description_
     """    
-    param.append(f'units           metal\n')
+    param = []
+    param.append('units           metal\n')
     param.append('\n')
     param.append('atom_style      atomic\n')
     param.append('atom_modify     map array\n')
@@ -238,8 +246,7 @@ def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
     param.append(f'read_data       {struc_file}\n')
     param.append(f'pair_style      deepmd {model_name}\n')
     param.append('pair_coeff      * *\n')
-    if config.get["processes"]:
-        processes = config.get["processes"]
+    if processes:
         for sub_dict in processes:
             if sub_dict.get('process') == 'minimize':
                 param = add_minimize(param)
@@ -247,7 +254,7 @@ def build_in_lmp(config: dict, param: list, model_name: str, struc_file: str):
                 param = add_md_process(param, sub_dict["params"], sub_dict["_idx"])
             else:
                 raise NotImplementedError('only minimize and md_run supported for now.')
-    with open('in.lmp', 'w') as file:
+    with open(Path(work_dir) / 'in.lmp', 'w') as file:
         file.writelines(param)
     return None
 
@@ -255,7 +262,7 @@ def grasp_strucs_from_traj(
         traj_name: str,
         every_n_frame: int,
         type_map: dict,
-        mass_map: dict
+        mass_map: dict,
     ) -> List[Path]:
     """This function is used to grasp single structures from a lammps trajectory
 
@@ -284,7 +291,5 @@ def grasp_strucs_from_traj(
             f.writelines(new_lines)
         os.makedirs(f'lmp-{i}', exist_ok=True)
         shutil.copy(f'lmp-{i}.data', Path(f'lmp-{i}') / 'lmp.data')
-        shutil.copy('graph.000.pb', Path(f'lmp-{i}'))
-        shutil.copy('in.lmp', Path(f'lmp-{i}'))
         list_path.append(Path(f'lmp-{i}'))
         return list_path

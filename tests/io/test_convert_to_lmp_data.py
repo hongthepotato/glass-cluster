@@ -16,11 +16,11 @@ def compare_files(file1, file2):
         return stripped_lines1 == stripped_lines2
 
 def test_convert_to_lmp_data(tmp_path, make_single_struc, data_path):
-    convert_to_lmp_data(
+    file_path = convert_to_lmp_data(
         make_single_struc,
         {"0": "Si", "1": "O"},
         {"Si": 28.085, "O":15.999},
         tmp_path
     )
-    result = compare_files(tmp_path / 'lmp.data', data_path / 'ref_lmp.data')
+    result = compare_files(file_path, data_path / 'ref_lmp.data')
     assert result

@@ -4,6 +4,32 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
+def generate_doas_mini_input(model: str, work_dir: Path) -> Path:
+    """_summary_
+
+    Args:
+        work_dir (Path): _description_
+    """   
+    ret = [] 
+    ret.append("units           metal\n")
+    ret.append("\n")
+    ret.append("atom_style      atomic\n")
+    ret.append("atom_modify     map array\n")
+    ret.append("boundary        p p p\n")
+    ret.append("atom_modify     sort 0 0.0\n")
+    ret.append("\n")
+    ret.append("read_data       lmp.data\n")
+    ret.append("\n")
+    ret.append(f"pair_style      deepmd {model}\n")
+    ret.append("pair_coeff      * * \n")
+    ret.append("\n")
+    ret.append("compute peratom_energy all pe/atom\n")
+    ret.append("dump peratom_dump all custom 100 dump.atom_energy id type c_peratom_energy\n")
+    ret.append("minimize 1.0e-6 1.0e-8 10000 100000\n")
+    with open(Path(work_dir) / "in.lmp", 'w', encoding="utf=8") as f:
+        f.writelines(ret)
+    file_path = Path(work_dir) / 'in.lmp'
+    return file_path
 
 def get_type_index(type_map, target_element):
     """get the index of target element
@@ -51,7 +77,12 @@ def parse_single(filename: str, target_element: str, type_map: dict):
     second_half_data = data[n::]
     return second_half_data
 
-def plot_doas(target_folders: list, target_element: str, bins: int, type_map: dict):
+def plot_doas(
+    target_folders: list,
+    target_element: str,
+    bins: int,
+    type_map: dict
+):
     """_summary_
 
     Args:
@@ -78,4 +109,5 @@ def plot_doas(target_folders: list, target_element: str, bins: int, type_map: di
     plt.xticks(xticks, xticks_labels)
     plt.savefig('doas.png', dpi=300)
     plt.show()
-    return None
+    fig_path = Path('doas.png')
+    return fig_path
