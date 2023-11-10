@@ -1,5 +1,7 @@
 import pytest
+
 from glass.property.doas import get_type_index
+
 
 def test_get_type_index():
     type_map = {"0": "H", "1": "O", "2": "N"}

@@ -1,12 +1,14 @@
-from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
-from pathlib import Path
-from typing import List
-from glass.io.input import grasp_strucs_from_traj
-from glass.property.doas import generate_doas_mini_input
-import shutil
 import glob
 import os
-from glass.property.doas import plot_doas
+import shutil
+from pathlib import Path
+from typing import List
+
+from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
+
+from glass.io.input import grasp_strucs_from_traj
+from glass.property.doas import generate_doas_mini_input, plot_doas
+
 
 class GraspSnapShotOP(OP):
     """_summary_

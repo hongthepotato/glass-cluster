@@ -1,6 +1,8 @@
-from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
-from pathlib import Path
 import os
+from pathlib import Path
+
+from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
+
 
 class DpRunOP(OP):
     """_summary_

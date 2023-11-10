@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 
+
 def generate_doas_mini_input(model: str, work_dir: Path) -> Path:
     """_summary_
 

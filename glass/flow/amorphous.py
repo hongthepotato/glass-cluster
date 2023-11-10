@@ -1,19 +1,18 @@
 import json
 import time
 from pathlib import Path
-from typing import Union, Optional
-from typing import Union
-from glass.utils import Mdata, config_argo, dispatcher_executor
+from typing import Optional, Union
 
 from dflow import Step, Workflow, argo_range, upload_artifact
 from dflow.plugins.datasets import DatasetsArtifact
+from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import PythonOPTemplate, Slices
 from dflow.utils import download_artifact
-from dflow.plugins.dispatcher import DispatcherExecutor
 
-from glass.io.input_op import StrucPrepOP, MDInputPrepOP
-from glass.simulation.dp_run_op import DpRunOP
+from glass.io.input_op import MDInputPrepOP, StrucPrepOP
 from glass.property.doas_op import GraspSnapShotOP, PlotDoas
+from glass.simulation.dp_run_op import DpRunOP
+from glass.utils import Mdata, config_argo, dispatcher_executor
 
 
 def amorphous_flow(

@@ -1,11 +1,11 @@
+import os
 import shutil
 from pathlib import Path
-import os
 
 from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
 from pymatgen.core.structure import Structure
 
-from glass.io.input import convert_to_lmp_data, get_dope, build_in_lmp
+from glass.io.input import build_in_lmp, convert_to_lmp_data, get_dope
 
 
 class DopeStrucPrep(OP):
