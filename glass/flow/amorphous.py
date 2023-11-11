@@ -3,7 +3,8 @@ import time
 from pathlib import Path
 from typing import Union
 
-from dflow import Step, Workflow, argo_range, download_artifact, upload_artifact
+from dflow import (Step, Workflow, argo_range, download_artifact,
+                   upload_artifact)
 
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import PythonOPTemplate, Slices
