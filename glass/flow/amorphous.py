@@ -42,7 +42,7 @@ def amorphous_flow(
         model = upload_artifact(model_file)
 
     prep_struc = Step(
-        name="prep_struc",
+        name="prep-struc",
         template=PythonOPTemplate(
             StrucPrepOP,
             image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
@@ -56,7 +56,7 @@ def amorphous_flow(
     wf.add(prep_struc)
 
     prep_MD_input = Step(
-        name="prep_md_input",
+        name="prep-md-input",
         template=PythonOPTemplate(
             MDInputPrepOP,
             image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
@@ -77,7 +77,7 @@ def amorphous_flow(
     wf.add(prep_MD_input)
 
     run_md = Step(
-        name="run_md",
+        name="run-md",
         template=PythonOPTemplate(
             DpRunOP,
             image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6"
@@ -97,7 +97,7 @@ def amorphous_flow(
             traj_name = mini_dict["params"]["traj_file_name"]
 
     grasp_snap = Step(
-        name="grasp_snapshot",
+        name="grasp-snapshot",
         template=PythonOPTemplate(
             GraspSnapShotOP,
             image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
@@ -118,7 +118,7 @@ def amorphous_flow(
     wf.add(grasp_snap)
 
     minimize_snap = Step(
-        name="mini_snapshot",
+        name="mini-snapshot",
         template=PythonOPTemplate(
             DpRunOP,
             image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6",
@@ -139,19 +139,19 @@ def amorphous_flow(
     wf.add(minimize_snap)
 
     plot_doas = Step(
-        name="plot_doas",
+        name="plot-doas",
         template=PythonOPTemplate(
             PlotDoas,
-            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2",
-            artifacts={
-                "minimize_dirs": minimize_snap.outputs.artifacts["dp_dir"]
-            },
-            parameters={
-                "target_element": pdata["properties"]["doas"]["target_element"],
-                "bins": pdata["properties"]["doas"]["bins"],
-                "type_map": pdata["type_map"]
-            }
+            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
         ),
+        artifacts={
+            "minimize_dirs": minimize_snap.outputs.artifacts["dp_dir"]
+        },
+        parameters={
+            "target_element": pdata["properties"]["doas"]["target_element"],
+            "bins": pdata["properties"]["doas"]["bins"],
+            "type_map": pdata["type_map"]
+        },
         key="plot-doas"
     )
 
