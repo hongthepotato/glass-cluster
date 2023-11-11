@@ -1,4 +1,3 @@
-import numpy as np
 
 
 class Traj(object):
@@ -6,4 +5,3 @@ class Traj(object):
         """
         A class to store and manipulate MD traj datas
         """
-        pass
