@@ -66,7 +66,7 @@ def amorphous_flow(
         name="run-md",
         template=PythonOPTemplate(
             DpRunOP,
-            image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6"
+            image="registry.dp.tech/dptech/deepmd-kit:2.2.4-cuda11.6"
         ),
         artifacts={
             "work_dir": prep_MD_input.outputs.artifacts["run_path"]
@@ -107,7 +107,7 @@ def amorphous_flow(
         name="mini-snapshot",
         template=PythonOPTemplate(
             DpRunOP,
-            image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6",
+            image="registry.dp.tech/dptech/deepmd-kit:2.2.4-cuda11.6",
             slices=Slices(
                 "{{item}}",
                 input_artifact=["work_dir"],
