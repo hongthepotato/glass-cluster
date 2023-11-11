@@ -20,37 +20,37 @@ def main():
     # parser_dft_param_test
     parser_dft_param = subparsers.add_parser(
         "dft_param_test",
-        help="WTF"
+        help="For DFT parameters testing like kspacing"
     )
     parser_dft_param.add_argument(
         "-m",
         "--machine",
         type=str,
-        help="SORRY"
+        help="User-defined configuration file"
     )
     parser_dft_param.add_argument(
         "-p",
         "--parameter",
         type=str,
-        help=""
+        help="parameter file for current task"
     )
 
     # parser_amorphous_test
     parser_amorphous_test = subparsers.add_parser(
         "amorphous_test",
-        help=""
+        help="Amorphous test for DP and DFT"
     )
     parser_amorphous_test.add_argument(
         "-m",
         "--machine",
         type=str,
-        help=""
+        help="User-defined configuration file"
     )
     parser_amorphous_test.add_argument(
         "-p",
         "--parameter",
         type=str,
-        help=""
+        help="parameter file for current task"
     )
     parser_amorphous_test.add_argument(
         "-o",
@@ -60,3 +60,15 @@ def main():
         default="./"
     )
     parser_amorphous_test.set_defaults(handler=amorphous_flow)
+
+    # parser arguments actually
+    args = parser.parse_args()
+    if hasattr(args, 'handler'):
+        # print(args)
+        args.handler(args)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
