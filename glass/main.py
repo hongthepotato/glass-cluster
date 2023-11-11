@@ -1,5 +1,14 @@
 import argparse
 
+from glass.flow.amorphous import main_amorphous_flow
+
+
+def amorphous_flow(args):
+    main_amorphous_flow(
+        pdata_file=args.parameter,
+        mdata_file=args.machine,
+        path=args.output
+    )
 
 def main():
     parser = argparse.ArgumentParser(
@@ -43,3 +52,11 @@ def main():
         type=str,
         help=""
     )
+    parser_amorphous_test.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="Path for download output files",
+        default="./"
+    )
+    parser_amorphous_test.set_defaults(handler=amorphous_flow)

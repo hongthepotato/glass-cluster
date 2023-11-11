@@ -1,8 +1,15 @@
 import json
+import time
 from pathlib import Path
 from typing import Union
 
-from dflow import Step, Workflow, argo_range, upload_artifact
+from dflow import (
+    Step,
+    Workflow,
+    argo_range,
+    download_artifact,
+    upload_artifact,
+)
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import PythonOPTemplate, Slices
 
@@ -144,7 +151,8 @@ def amorphous_flow(
                 "bins": pdata["properties"]["doas"]["bins"],
                 "type_map": pdata["type_map"]
             }
-        )
+        ),
+        key="plot-doas"
     )
 
     wf.add(plot_doas)
@@ -154,6 +162,7 @@ def amorphous_flow(
 def main_amorphous_flow(
     pdata_file: Union[str, Path] = "param.json",
     mdata_file: Union[str, Path] = "machine.json",
+    path: Union[str, Path] = "./",
     dflow_labels = None
 ):
     with open(pdata_file, 'r', encoding='utf-8') as f:
@@ -168,3 +177,12 @@ def main_amorphous_flow(
         dflow_labels=dflow_labels,
         **pdata
     )
+    wf.submit()
+    while wf.query_status() in ["pending", "Running"]:
+        time.sleep(1)
+    assert (wf.query_status() == "Successed")
+    step_name = wf.query_step(name="plot_doas")
+
+    if len(step_name) > 0:
+        for jj in step_name:
+            download_artifact(jj.outputs.artifacts["doas_fig"], path)
