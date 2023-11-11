@@ -1,5 +1,6 @@
 import shutil
 from pathlib import Path
+from typing import List
 
 from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
 from pymatgen.core.structure import Structure
@@ -59,38 +60,6 @@ class DopeStrucPrep(OP):
         return op_out
 
 
-class StrucPrepOP(OP):
-    """_summary_
-
-    Args:
-        OP (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-
-    @classmethod
-    def get_input_sign(cls) -> OPIOSign:
-        return OPIOSign({
-            "struc_file": Artifact(Path)
-        })
-
-    @classmethod
-    def get_output_sign(cls) -> OPIOSign:
-        return OPIOSign({
-            "pmg_struc": Parameter(Structure)
-        })
-
-    @OP.exec_sign_check
-    def execute(self, op_in: OPIO) -> OPIO:
-        struc_file = op_in["struc_file"]
-        pmg_struc = Structure.from_file(struc_file)
-        op_out = {
-            "pmg_struc": pmg_struc
-        }
-        return op_out
-
-
 class MDInputPrepOP(OP):
     r"""
     This is a OP used to prep Input
@@ -100,10 +69,10 @@ class MDInputPrepOP(OP):
     def get_input_sign(cls) -> OPIOSign:
         return OPIOSign({
             # "dir_path": Artifact(Path),
-            "processes": Parameter(dict, default=None),
+            "processes": Parameter(List[dict], default=None),
             "in_lmp": Artifact(Path),
             "model": Artifact(Path),
-            "pmg_struc": Parameter(Structure),
+            "pmg_struc": Artifact(Path),
             "type_map": Parameter(dict),
             "mass_map": Parameter(dict)
         })
@@ -120,7 +89,8 @@ class MDInputPrepOP(OP):
         dir_path = Path("MD_input")
         dir_path.mkdir(exist_ok=True)
         model = op_in["model"]
-        pmg_struc = op_in["struc"]
+        struc = op_in["pmg_struc"]
+        pmg_struc = Structure.from_file(struc)
         type_map = op_in["type_map"]
         mass_map = op_in["mass_map"]
         file_path = convert_to_lmp_data(pmg_struc, type_map, mass_map, dir_path)

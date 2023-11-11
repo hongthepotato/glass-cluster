@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from dflow.python import OP, OPIO, Artifact, OPIOSign, Parameter
+from dflow.python import OP, OPIO, Artifact, OPIOSign
 
 
 class DpRunOP(OP):
@@ -14,8 +14,7 @@ class DpRunOP(OP):
     @classmethod
     def get_input_sign(cls) -> OPIOSign:
         return OPIO({
-            "work_dir": Artifact(Path),
-            "command": Parameter(str)
+            "work_dir": Artifact(Path)
         })
 
     @classmethod

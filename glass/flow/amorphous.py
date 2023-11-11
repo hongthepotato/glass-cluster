@@ -13,7 +13,7 @@ from dflow import (
 from dflow.plugins.dispatcher import DispatcherExecutor
 from dflow.python import PythonOPTemplate, Slices
 
-from glass.io.input_op import MDInputPrepOP, StrucPrepOP
+from glass.io.input_op import MDInputPrepOP
 from glass.property.doas_op import GraspSnapShotOP, PlotDoas
 from glass.simulation.dp_run_op import DpRunOP
 from glass.utils import Mdata, config_argo, dispatcher_executor
@@ -41,20 +41,6 @@ def amorphous_flow(
     if model_file := pdata.get("model"):
         model = upload_artifact(model_file)
 
-    prep_struc = Step(
-        name="prep-struc",
-        template=PythonOPTemplate(
-            StrucPrepOP,
-            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
-        ),
-        artifacts={
-            "struc_file": struc
-        },
-        key="prep-struc"
-    )
-
-    wf.add(prep_struc)
-
     prep_MD_input = Step(
         name="prep-md-input",
         template=PythonOPTemplate(
@@ -63,13 +49,13 @@ def amorphous_flow(
         ),
         parameters={
             "processes": pdata["processes"],
-            "pmg_struc": prep_struc.outputs.parameters["pmg_struc"],
             "type_map": pdata["type_map"],
             "mass_map": pdata["mass_map"]
         },
         artifacts={
             "in_lmp": in_lmp,
             "model": model,
+            "pmg_struc": struc
         },
         key="prep-md-input"
     )
