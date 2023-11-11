@@ -6,6 +6,7 @@
     "bohrium_config": {
         "username": "xxx",
         "password": "xxx",
+        "ticket": "xxxx",
         "project_id": "xxx"
     },
     "dispatcher": {

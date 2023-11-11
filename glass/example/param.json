@@ -1,22 +1,22 @@
 {
-    "structure": "./a.vasp",
+    "structure": "./example.vasp",
     "in_lmp": null,
-    "type_map": {"0": "H", "1": "Si"},
-    "mass_map": {"H": 1, "Si": 28},
+    "type_map": {"0": "Si", "1": "O", "2": "Bi"},
+    "mass_map": {"Si": 28.085, "O": 15.999, "Bi": 208.98},
     "model": "./graph.000.pb",
     "processes":
     [{
         "_idx": 0,
-        "process": "minimize/md_run",
+        "process": "md_run",
         "params": {
             "etol": 1e-10,
             "ftol": 1e-8,
             "thermo_steps": 2000,
-            "traj_file_name": "filename",
+            "traj_file_name": "keep.traj",
             "ensemble": "npt",
-            "n_steps": 2000,
-            "ini_t": 300,
-            "final_t": 300,
+            "n_steps": 100000,
+            "ini_t": 4000,
+            "final_t": 4000,
             "t_damp": 0.1,
             "t_step": 1e-4,
             "ini_p": 0.1,
@@ -28,14 +28,35 @@
     },
     {
         "_idx": 1,
-        "process": "minimize/md_run",
+        "process": "md_run",
         "params": {
             "etol": 1e-10,
             "ftol": 1e-8,
             "thermo_steps": 2000,
-            "traj_file_name": "filename1",
+            "traj_file_name": "quench.traj",
             "ensemble": "npt",
-            "n_steps": 2000,
+            "n_steps": 100000,
+            "ini_t": 4000,
+            "final_t": 300,
+            "t_damp": 0.1,
+            "t_step": 1e-4,
+            "ini_p": 0.1,
+            "final_p": 0.1,
+            "p_damp": 1.0,
+            "p_style": "iso",
+            "dump_freq": 1000
+        }
+    },
+    {
+        "_idx": 2,
+        "process": "md_run",
+        "params": {
+            "etol": 1e-10,
+            "ftol": 1e-8,
+            "thermo_steps": 2000,
+            "traj_file_name": "stay.traj",
+            "ensemble": "npt",
+            "n_steps": 1000000,
             "ini_t": 300,
             "final_t": 300,
             "t_damp": 0.1,
@@ -46,11 +67,12 @@
             "p_style": "iso",
             "dump_freq": 1000
         }
-    }],
+    }
+    ],
     "properties": {
         "doas": {
-            "_idx": 1,
-            "energy_n_frame": 1,
+            "_idx": 2,
+            "energy_n_frame": 2,
             "target_element": "Bi",
             "bins": 100
         }

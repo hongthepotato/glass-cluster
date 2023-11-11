@@ -45,7 +45,7 @@ def amorphous_flow(
         name="prep_struc",
         template=PythonOPTemplate(
             StrucPrepOP,
-            image="pymatgen contained"
+            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
         ),
         artifacts={
             "struc_file": struc
@@ -59,7 +59,7 @@ def amorphous_flow(
         name="prep_md_input",
         template=PythonOPTemplate(
             MDInputPrepOP,
-            image="pymatgen contained"
+            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
         ),
         parameters={
             "processes": pdata["processes"],
@@ -80,7 +80,7 @@ def amorphous_flow(
         name="run_md",
         template=PythonOPTemplate(
             DpRunOP,
-            image="deepmd"
+            image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6"
         ),
         artifacts={
             "work_dir": prep_MD_input.outputs.artifacts["run_path"]
@@ -100,7 +100,7 @@ def amorphous_flow(
         name="grasp_snapshot",
         template=PythonOPTemplate(
             GraspSnapShotOP,
-            image="any"
+            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2"
         ),
         artifacts={
             "md_run": run_md.outputs.artifacts["dp_dir"],
@@ -121,7 +121,7 @@ def amorphous_flow(
         name="mini_snapshot",
         template=PythonOPTemplate(
             DpRunOP,
-            image="deepmd",
+            image="registry.dp.tech/dptech/prod-13386/deepmd-kit:2.2.7_cuda11.6",
             slices=Slices(
                 "{{item}}",
                 input_artifact=["work_dir"],
@@ -142,7 +142,7 @@ def amorphous_flow(
         name="plot_doas",
         template=PythonOPTemplate(
             PlotDoas,
-            image="any",
+            image="registry.dp.tech/dptech/prod-13386/pylt-analysis:v2",
             artifacts={
                 "minimize_dirs": minimize_snap.outputs.artifacts["dp_dir"]
             },
