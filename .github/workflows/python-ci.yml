@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        pip install pylint pytest
+        pip install pylint pytest pytest-cov
         pip install isort==5.12.0
     - name: Run Pylint (optional)
       run: |
