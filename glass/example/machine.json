@@ -1,0 +1,23 @@
+{
+    "dflow_config":{
+        "host": "https://workflows.deepmodeling.com",
+        "k8s_api_server": "https://workflows.deepmodeling.com"
+    },
+    "bohrium_config": {
+        "username": "xxx",
+        "password": "xxx",
+        "project_id": "xxx"
+    },
+    "dispatcher": {
+        "batch_type": "Bohrium",
+        "context_type": "Bohrium",
+        "input_data": {
+            "job_type": "container",
+            "platform": "ali",
+            "scass_type": "c32_m64_cpu",
+            "log_file": "*.output"
+        }
+    },
+    "step_request": {"ephemeral-storage": "8Gi"},
+    "step_limits": {"ephemeral-storage": "8Gi"}
+}
