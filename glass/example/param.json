@@ -72,7 +72,7 @@
     "properties": {
         "doas": {
             "_idx": 2,
-            "energy_n_frame": 2,
+            "every_n_frame": 2,
             "target_element": "Bi",
             "bins": 100
         }
