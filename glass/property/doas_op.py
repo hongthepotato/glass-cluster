@@ -1,4 +1,3 @@
-import glob
 import os
 import shutil
 from pathlib import Path
@@ -88,8 +87,8 @@ class PlotDoas(OP):
         target_element = op_in["target_element"]
         bins = op_in["bins"]
         type_map = op_in["type_map"]
-        target_folders = [folder for folder in glob.glob('lmp*') if os.path.isdir(folder)]
-        fig_path = plot_doas(target_folders, target_element, bins, type_map)
+        minimize_dirs = op_in["minimize_dirs"]
+        fig_path = plot_doas(minimize_dirs, target_element, bins, type_map)
         op_out = {
             "doas_fig": fig_path
         }
