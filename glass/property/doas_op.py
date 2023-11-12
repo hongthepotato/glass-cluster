@@ -38,12 +38,13 @@ class GraspSnapShotOP(OP):
 
     @OP.exec_sign_check
     def execute(self, op_in: OPIO) -> OPIO:
-        traj_file_name = op_in["traj_file_name"]
+        traj_file_name = op_in["traj_file_name"] + '.lammpstrj'
         # minimize_input = op_in["minimize"]
         model = op_in["model"]
         energy_n_frame = op_in["energy_n_frame"]
         type_map = op_in["type_map"]
         mass_map = op_in["mass_map"]
+        os.chdir(op_in["md_run"])
         minimize_dirs = grasp_strucs_from_traj(
             traj_file_name,
             energy_n_frame,

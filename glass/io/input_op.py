@@ -89,6 +89,7 @@ class MDInputPrepOP(OP):
         dir_path = Path("MD_input")
         dir_path.mkdir(exist_ok=True)
         model = op_in["model"]
+        shutil.copy(model, dir_path)
         struc = op_in["pmg_struc"]
         pmg_struc = Structure.from_file(struc)
         type_map = op_in["type_map"]

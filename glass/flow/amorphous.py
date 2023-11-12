@@ -164,7 +164,7 @@ def main_amorphous_flow(
         **pdata
     )
     wf.submit()
-    while wf.query_status() in ["pending", "Running"]:
+    while wf.query_status() in ["Pending", "Running"]:
         time.sleep(1)
     assert (wf.query_status() == "Successed")
     step_name = wf.query_step(name="plot_doas")
