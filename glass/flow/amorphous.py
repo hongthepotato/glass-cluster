@@ -166,8 +166,8 @@ def main_amorphous_flow(
     wf.submit()
     while wf.query_status() in ["Pending", "Running"]:
         time.sleep(1)
-    assert (wf.query_status() == "Successed")
-    step_name = wf.query_step(name="plot_doas")
+    assert (wf.query_status() == "Succeeded")
+    step_name = wf.query_step(name="plot-doas")
 
     if len(step_name) > 0:
         for jj in step_name:
