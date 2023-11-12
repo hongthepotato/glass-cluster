@@ -195,7 +195,7 @@ def add_md_process(
     param.append(f'timestep        {param_dict["time_step"]}\n')
     param.append('neighbor        1.0 bin\n')
     param.append('neigh_modify    every 2 delay 10 check yes\n')
-    param.append(f'dump Dumpstay all custom {param_dict["dump_freq"]} \
+    param.append(f'dump Dump{param_dict["traj_file_name"]} all custom {param_dict["dump_freq"]} \
                  {param_dict["traj_file_name"]}.lammpstrj id type x y z\n')
     param.append(f'run             {param_dict["n_steps"]}\n')
     param.append(f'unfix           {fix_id}\n')
@@ -292,4 +292,4 @@ def grasp_strucs_from_traj(
         os.makedirs(f'lmp-{i}', exist_ok=True)
         shutil.copy(f'lmp-{i}.data', Path(f'lmp-{i}') / 'lmp.data')
         list_path.append(Path(f'lmp-{i}'))
-        return list_path
+    return list_path
