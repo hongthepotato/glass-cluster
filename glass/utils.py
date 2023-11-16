@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+from pathlib import Path
 from typing import Any, Optional, Type
 
 import dflow
@@ -237,3 +238,29 @@ def dispatcher_executor(**config_para):
             "remote_profile": {"input_data": config_para["dispatcher"].get("input_data")}
             },
             image_pull_policy = "IfNotPresent")
+
+def combine_files(outputfile: Path, *inputfiles) -> Path:
+    """combine a list of files into one file
+
+    Args:
+        outputfile (Path): name of output file
+
+    Returns:
+        Path: the Path of outputfile
+    """
+    with open(outputfile, 'w', encoding='utf-8') as out_file:
+        for file in inputfiles:
+            with open(file, 'r', encoding='utf-8') as in_file:
+                content = in_file.read()
+                out_file.write(content)
+    return Path(outputfile)
+
+def get_bak_file(sfile):
+    while sfile[-1] == '/':
+        sfile = sfile[:-1]
+    n = 1
+    bk = sfile + ".bak%d" % n
+    while os.path.exists(bk):
+        n += 1
+        bk = sfile + ".bak%d" % n
+    return bk

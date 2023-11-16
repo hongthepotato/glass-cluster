@@ -20,7 +20,7 @@ def main():
     # parser_dft_param_test
     parser_dft_param = subparsers.add_parser(
         "dft_param_test",
-        help="For DFT parameters testing like kspacing"
+        help="For DFT parameters testing like kspacing, only VASP for now"
     )
     parser_dft_param.add_argument(
         "-m",
